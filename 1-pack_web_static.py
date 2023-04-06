@@ -13,5 +13,4 @@ def do_pack():
         return "versions/web_static_{}.tgz".format(file_Name)
 
     except Exception as e:
-        print("Exception occurred while creating archive: ", e)
         return None

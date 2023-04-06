@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 from fabric.api import local
-from datetime import date
 from time import strftime
+from datetime import date
 
 def do_pack():
     """ This Script generates archive the contents of web_static """
@@ -13,4 +13,5 @@ def do_pack():
         return "versions/web_static_{}.tgz".format(file_Name)
 
     except Exception as e:
+        print("Exception occurred in the priocess of creating archive: ", e)
         return None

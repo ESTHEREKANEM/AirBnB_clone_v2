@@ -1,18 +1,17 @@
 #!/usr/bin/python3
-import os
-import tarfile
-import datetime
+from fabric.api import local
+from datetime import date
+from time import strftime
 
 def do_pack():
-    now = datetime.datetime.utcnow()
-    file_name = "web_static_{}.tgz".format(now.strftime("%Y%m%d%H%M%S"))
-    archive_path = os.path.join("versions", file_name)
-    if not os.path.exists("versions"):
-        os.makedirs("versions")
-
+    """ This Script generates archive the contents of web_static """
+    file_Name = strftime("%Y%m%d%H%M%S")
     try:
-        with tarfile.open(archive_path, "w:gz") as archive:
-            archive.add("web_static", arcname=os.path.basename("web_static"))
-        return archive_path
-    except:
+        local("mkdir -p versions")
+        local("tar -czvf versions/web_static_{}.tgz web_static/"
+              .format(file_Name))
+        return "versions/web_static_{}.tgz".format(file_Name)
+
+    except Exception as e:
+        print("Exception occurred while creating archive: ", e)
         return None

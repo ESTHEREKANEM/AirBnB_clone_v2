@@ -1,14 +1,18 @@
 #!/usr/bin/python3
-from fabric.api import local
-from datetime import datetime
-from time import strftime
+import os
+import tarfile
+import datetime
 
 def do_pack():
-    now = datetime.now()
-    time_stamp = now.strftime("%Y%m%d%H%M%S")
-    Filename = "web_static_{}.tgz".format(time_stamp)
-    local("mkdir -p versions")
-    result = local("tar -czvf versions/{} web_static".format(Filename))
-    if result.failed:
+    now = datetime.datetime.utcnow()
+    file_name = "web_static_{}.tgz".format(now.strftime("%Y%m%d%H%M%S"))
+    archive_path = os.path.join("versions", file_name)
+    if not os.path.exists("versions"):
+        os.makedirs("versions")
+
+    try:
+        with tarfile.open(archive_path, "w:gz") as archive:
+            archive.add("web_static", arcname=os.path.basename("web_static"))
+        return archive_path
+    except:
         return None
-    return "versions/{}".format(Filename)

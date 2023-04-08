@@ -1,37 +1,29 @@
 #!/usr/bin/python3
 """In the following example, the SSH key and the username used for accessing to the server are passed in the command line
 """
-from fabric.api import *
-from datetime import datetime
+from fabric.api import env, put, run, sudo
+from os.path import exists
 import os
-env.hosts = ['18.235.248.180', '18.215.160.220']
-env.user = os.getenv('ubuntu')
-env.key_filename = os.getenv('~/.ssh/id_rsa')
+
+env.hosts = ['54.146.79.137', '54.152.191.29']
 
 def do_deploy(archive_path):
-    if not os.path.isfile(archive_path):
+    if not exists(archive_path):
         return False
 
-    put(archive_path, '/tmp/')
+    try:
+        put(archive_path, '/tmp/')
+        file_name = os.path.basename(archive_path)
+        folder_name = "/data/web_static/releases/{}".format(file_name.split(".")[0])
+        run("sudo mkdir -p {}/".format(folder_name))
+        run("sudo tar -xzf /tmp/{} -C {}/".format(file_name, folder_name))
+        run("sudo rm /tmp/{}".format(file_name))
+        run("sudo rm -rf /data/web_static/current")
+        run("sudo ln -s {} /data/web_static/current".format(folder_name))
 
-    archive_filename = os.path.basename(archive_path)
-    archive_name = os.path.splitext(archive_filename)[0]
+        print("New version deployed!")
+        return True
 
-    run('mkdir -p /data/web_static/releases/{}'.format(archive_name))
-
-    run('tar -xzf /tmp/{} -C /data/web_static/releases/{}/'
-        .format(archive_filename, archive_name))
-
-    run('rm /tmp/{}'.format(archive_filename))
-
-    run('mv /data/web_static/releases/{}/web_static/* '
-        '/data/web_static/releases/{}/'.format(archive_name, archive_name))
-
-    run('rm -rf /data/web_static/releases/{}/web_static'.format(archive_name))
-
-    run('rm -f /data/web_static/current')
-
-    run('ln -s /data/web_static/releases/{} /data/web_static/current'
-        .format(archive_name))
-
-    return True
+    except Exception as e:
+        print("Exception occurred during deployment: ", e)
+        return False

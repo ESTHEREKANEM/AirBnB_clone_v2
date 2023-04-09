@@ -1,9 +1,11 @@
-#!/usr/bin/env python3
+#!/usr/bin/python3
+"""creates an ditribut an archive to your web
+"""
+
 from fabric.api import env, put, run, local, runonce
 import os
 from datetime import datetime
-"""creates an ditribut an archive to your web
-"""
+
 env.hosts = ['54.146.79.137', '54.152.191.29']
 
 @runs_once

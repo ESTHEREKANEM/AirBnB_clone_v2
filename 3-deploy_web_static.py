@@ -3,8 +3,8 @@ from fabric.api import env, put, run, sudo, local
 import os
 """creates an ditribut an archive to your web
 """
-env.hosts = ['<IP web-01>', '<IP web-02>']
-env.user = os.getenv('SSH_USER')
+env.hosts = ['54.146.79.137', '54.152.191.29']
+env.user = os.getenv('ubuntu')
 env.key_filename = os.getenv('SSH_KEY_FILE')
 
 def do_pack():

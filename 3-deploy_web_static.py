@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-from fabric.api import env, put, run, sudo, local, run_once
+from fabric.api import env, put, run, local, runonce
 import os
 from datetime import datetime
 """creates an ditribut an archive to your web

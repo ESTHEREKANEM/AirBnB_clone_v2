@@ -1,12 +1,13 @@
 #!/usr/bin/python3
-"""creates an ditribut an archive to your web
-"""
-
-from fabric.api import env, put, run, local, runonce
+'''creates an ditribut an archive to your web
+'''
 import os
 from datetime import datetime
+from fabric.api import env, local, put, run, runs_once
+
 
 env.hosts = ['54.146.79.137', '54.152.191.29']
+
 
 @runs_once
 def do_pack():
@@ -63,4 +64,4 @@ def deploy():
     """Archives and deploys the static files to the host servers.
     """
     archive_path = do_pack()
-    return do_deploy(archive_path) if archive_path else False
+    return do_deploy(archive_path) if (archive path) else False
